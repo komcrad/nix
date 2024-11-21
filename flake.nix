@@ -25,21 +25,39 @@
     lib = nixpkgs.lib;
     system = "x86_64-linux";
     #system = "aarch64-darwin";
-    pkgs = import nixpkgs {
-      inherit system;
-      overlays = [nixgl.overlay];
-    };
+    #pkgs = import nixpkgs {
+    #  inherit system;
+    #  overlays = [nixgl.overlay];
+    #};
     unstable = import nixpkgs-unstable {inherit system;};
   in {
     defaultPackage.x86_64-linux = home-manager.defaultPackage.x86_64-linux;
     defaultPackage.aarch64-darwin = home-manager.defaultPackage.aarch64-darwin;
     homeConfigurations = {
-      komcrad = home-manager.lib.homeManagerConfiguration {
-        pkgs = pkgs;
+      linux = home-manager.lib.homeManagerConfiguration {
+        pkgs = import nixpkgs {
+          inherit system;
+          overlays = [nixgl.overlay];
+        };
         extraSpecialArgs = {
           inherit unstable;
         };
-        modules = [./home.nix ./mac.nix];
+        modules = [
+          ./home.nix
+          ./linux.nix
+        ];
+      };
+      mac = home-manager.lib.homeManagerConfiguration {
+        pkgs = import nixpkgs {
+          inherit system;
+        };
+        extraSpecialArgs = {
+          inherit unstable;
+        };
+        modules = [
+          ./home.nix
+          ./mac.nix
+        ];
       };
     };
   };

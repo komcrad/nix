@@ -9,6 +9,17 @@
       "vscode"
       "nvidia"
     ];
+
+  programs.kitty = {
+    enable = true;
+    theme = "Catppuccin-Mocha";
+    font.size = 15;
+    font.name = "Monospace";
+    settings = {
+      confirm_os_window_close = -0;
+    };
+  };
+
   home = {
     packages =
       (with pkgs; [
@@ -19,14 +30,16 @@
         black
         isort
         leiningen
-        nixgl.auto.nixGLNvidia # TODO this needs to be host specific
         ripgrep
+        brave
         vscode
+        kitty
         alejandra
       ])
       ++ (with unstable; [
         neovim
         clojure-lsp
+        #(lib.hiPrio kitty)
       ]);
 
     # This needs to actually be set to your username
