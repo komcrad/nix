@@ -25,12 +25,9 @@
     ...
   }: let
     lib = nixpkgs.lib;
-    system = "x86_64-linux";
+    system = (import ./user.nix).system;
+    #system = "x86_64-linux";
     #system = "aarch64-darwin";
-    #pkgs = import nixpkgs {
-    #  inherit system;
-    #  overlays = [nixgl.overlay];
-    #};
     unstable = import nixpkgs-unstable {inherit system;};
   in {
     defaultPackage.x86_64-linux = home-manager.defaultPackage.x86_64-linux;
