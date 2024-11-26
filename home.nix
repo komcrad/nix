@@ -23,7 +23,6 @@
         isort
         leiningen
         ripgrep
-        brave
         vscode
         alejandra
       ])
