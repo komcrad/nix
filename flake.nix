@@ -25,8 +25,7 @@
     ...
   }: let
     lib = nixpkgs.lib;
-    system = (import ./user.nix).system;
-    #system = "x86_64-linux";
+    system = "x86_64-linux";
     #system = "aarch64-darwin";
     unstable = import nixpkgs-unstable {inherit system;};
   in {
