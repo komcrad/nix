@@ -29,10 +29,12 @@
   }: let
     lib = nixpkgs.lib;
     system = "x86_64-linux";
+    #system = "aarch64-linux";
     #system = "aarch64-darwin";
     unstable = import nixpkgs-unstable {inherit system;};
   in {
     defaultPackage.x86_64-linux = home-manager.defaultPackage.x86_64-linux;
+    defaultPackage.aarch64-linux = home-manager.defaultPackage.aarch64-darwin-linux;
     defaultPackage.aarch64-darwin = home-manager.defaultPackage.aarch64-darwin;
     homeConfigurations = {
       linux = home-manager.lib.homeManagerConfiguration {
