@@ -14,8 +14,9 @@
   home = {
     packages =
       (with pkgs; [
-        jdk11
+        jdk17
         clojure
+        cljfmt
         stylua
         rustup
         gnupg
