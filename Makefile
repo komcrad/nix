@@ -1,10 +1,10 @@
-.PHONY: update-linux
-update-linux:
-	nix run home-manager/release-24.05 -- switch --flake .#linux --impure
+.PHONY: linux
+linux:
+	nix run home-manager/release-24.11 -- switch --flake .#linux
 
-.PHONY: update-mac
-update-mac:
-	nix run home-manager/release-24.05 -- switch --flake .#mac
+.PHONY: mac
+mac:
+	nix run home-manager/release-24.11 -- switch --flake .#mac
 
 .PHONY: clean
 clean:

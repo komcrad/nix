@@ -2,6 +2,8 @@
   lib,
   pkgs,
   unstable,
+  config,
+  nixgl,
   ...
 }: {
   nixpkgs.config.allowUnfreePredicate = pkg:
@@ -9,42 +11,30 @@
       "vscode"
       "nvidia"
     ];
-
-  programs.kitty = {
-    enable = true;
-    theme = "Catppuccin-Mocha";
-    font.size = 15;
-    font.name = "Monospace";
-    settings = {
-      confirm_os_window_close = -0;
-    };
-  };
-
   home = {
     packages =
       (with pkgs; [
-        jdk11
+        jdk17
         clojure
+        cljfmt
         stylua
         rustup
+        gnupg
         black
         isort
         leiningen
         ripgrep
-        brave
         vscode
-        kitty
         alejandra
       ])
       ++ (with unstable; [
         neovim
         clojure-lsp
-        #(lib.hiPrio kitty)
       ]);
 
     # This needs to actually be set to your username
-    username = "<username>";
-    homeDirectory = "<home>";
+    username = (import ./user.nix).username;
+    homeDirectory = (import ./user.nix).homeDirectory;
 
     # You do not need to change this if you're reading this in the future.
     # Don't ever change this after the first build.  Don't ask questions.
