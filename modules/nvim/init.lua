@@ -16,6 +16,8 @@ Plug("hrsh7th/cmp-cmdline", { ["commit"] = "d250c63aa13ead745e3a40f61fdd3470efde
 Plug("hrsh7th/nvim-cmp", { ["commit"] = "f17d9b4394027ff4442b298398dfcaab97e40c4f" })
 Plug("hrsh7th/cmp-vsnip", { ["commit"] = "989a8a73c44e926199bfd05fa7a516d51f2d2752" })
 Plug("hrsh7th/vim-vsnip", { ["commit"] = "02a8e79295c9733434aab4e0e2b8c4b7cea9f3a9" })
+Plug("tpope/vim-dadbod", { ["commit"] = "fe5a55e92b2dded7c404006147ef97fb073d8b1b" })
+Plug("kristijanhusak/vim-dadbod-completion", { ["commit"] = "04485bfb53a629423233a4178d71cd4f8abf7406" })
 Plug("Olical/conjure", { ["commit"] = "bc8907e4ca572720a9f785660781450f8e79ef05" })
 Plug("tpope/vim-fugitive", { ["commit"] = "d4877e54cef67f5af4f950935b1ade19ed6b7370" })
 Plug("jiangmiao/auto-pairs", { ["commit"] = "39f06b873a8449af8ff6a3eee716d3da14d63a76" }) -- surround?
@@ -24,6 +26,8 @@ Plug("guns/vim-sexp", { ["commit"] = "14464d4580af43424ed8f2614d94e62bfa40bb4d" 
 Plug("tpope/vim-sexp-mappings-for-regular-people", { ["commit"] = "cc5923e357373ea6ef0c13eae82f44e6b9b1d374" })
 Plug("stevearc/conform.nvim", { ["commit"] = "e3263eabbfc1bdbc5b6a60ba8431b64e8dca0a79" })
 Plug("catppuccin/nvim", { ["commit"] = "637d99e638bc6f1efedac582f6ccab08badac0c6" })
+Plug("knsh14/vim-github-link", { ["commit"] = "9df238dbf150417772f2a1b7748750cfeda3d167" })
+Plug("xiyaowong/fast-cursor-move.nvim", { ["commit"] = "9ab80d0184861be18833647e983086725b9905f9" })
 
 vim.call("plug#end")
 require("nvim-surround").setup()
@@ -40,6 +44,10 @@ vim.api.nvim_create_autocmd("BufWritePost", {
 		end
 	end,
 })
+
+vim.opt.tabstop = 2
+vim.opt.shiftwidth = 2
+vim.opt.expandtab = true
 
 vim.cmd.colorscheme("catppuccin")
 conform = require("conform")
@@ -59,12 +67,12 @@ conform.setup({
 	},
 })
 
-vim.api.nvim_create_autocmd("BufWritePre", {
-	pattern = "*",
-	callback = function(args)
-		conform.format({ bufnr = args.buf, timeout_ms = 5000 })
-	end,
-})
+-- vim.api.nvim_create_autocmd("BufWritePre", {
+-- 	pattern = "*",
+-- 	callback = function(args)
+-- 		conform.format({ bufnr = args.buf, timeout_ms = 5000 })
+-- 	end,
+-- })
 
 conform.formatters.cljfmt = {
 	prepend_args = function(self, ctx)
@@ -74,8 +82,44 @@ conform.formatters.cljfmt = {
 
 --vim.api.nvim_set_keymap("n", "ag", ":Rg <cr>", { noremap = true})
 --vim.api.nvim_set_keymap("n", "ff", ":Files <cr>", { noremap = true})
+
+vim.api.nvim_exec(
+	[[
+function! DBSend()
+  execute "normal vap\<Esc>"
+  execute ":'<,'>DB"
+endfunction
+]],
+	false
+)
+
 local builtin = require("telescope.builtin")
-vim.keymap.set("n", "cpp", ":ConjureEvalCurrentForm<cr>", { desc = "Eval current form" })
+
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "sql" }, -- Apply this only to SQL files
+	callback = function()
+		-- Create the keymap for selecting the paragraph and running :Db
+		vim.api.nvim_buf_set_keymap(0, "n", "cpp", ":call DBSend()<CR>", {
+			noremap = true,
+			silent = true,
+		})
+	end,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "clj", "cljc", "cljs" }, -- Apply this only to SQL files
+	callback = function()
+		-- Create the keymap for selecting the paragraph and running :Db
+		vim.api.nvim_buf_set_keymap(0, "n", "cpp", ":call ConjureEvalCurrentForm<CR>", {
+			noremap = true,
+			silent = true,
+		})
+	end,
+})
+
+vim.keymap.set("n", "gl", ":GetCommitLink", { desc = "Put github link on clipboard" })
+vim.keymap.set("n", "fs", conform.format, { desc = "Format buffer" })
+vim.keymap.set("n", "ff", builtin.find_files, { desc = "Telescope find files" })
 vim.keymap.set("n", "ff", builtin.find_files, { desc = "Telescope find files" })
 vim.keymap.set("n", "fg", builtin.live_grep, { desc = "Telescope live grep" })
 vim.keymap.set("n", "fb", builtin.buffers, { desc = "Telescope buffers" })
@@ -110,9 +154,12 @@ cmp.setup({
 		["<C-e>"] = cmp.mapping.abort(),
 		["<CR>"] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
 	}),
+
+	-- list of sources https://github.com/hrsh7th/nvim-cmp/wiki/List-of-sources
 	sources = cmp.config.sources({
 		{ name = "nvim_lsp" },
 		{ name = "vsnip" }, -- For vsnip users.
+		{ name = "vim-dadbod-completion" },
 		-- { name = 'luasnip' }, -- For luasnip users.
 		-- { name = 'ultisnips' }, -- For ultisnips users.
 		-- { name = 'snippy' }, -- For snippy users.

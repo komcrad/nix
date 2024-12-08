@@ -16,6 +16,7 @@
       (with pkgs; [
         jdk17
         clojure
+        postgresql
         cljfmt
         stylua
         rustup
@@ -51,6 +52,9 @@
       ".config/nvim" = {
         recursive = true;
         source = ./modules/nvim;
+      };
+      ".cljfmt.edn" = {
+        source = ./modules/cljfmt.edn;
       };
     };
   };
