@@ -26,6 +26,7 @@ Plug("guns/vim-sexp", { ["commit"] = "14464d4580af43424ed8f2614d94e62bfa40bb4d" 
 Plug("tpope/vim-sexp-mappings-for-regular-people", { ["commit"] = "cc5923e357373ea6ef0c13eae82f44e6b9b1d374" })
 Plug("stevearc/conform.nvim", { ["commit"] = "e3263eabbfc1bdbc5b6a60ba8431b64e8dca0a79" })
 Plug("catppuccin/nvim", { ["commit"] = "637d99e638bc6f1efedac582f6ccab08badac0c6" })
+Plug("knsh14/vim-github-link", { ["commit"] = "9df238dbf150417772f2a1b7748750cfeda3d167" })
 
 vim.call("plug#end")
 require("nvim-surround").setup()
@@ -115,6 +116,7 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
+vim.keymap.set("n", "gl", ":GetCommitLink", { desc = "Put github link on clipboard" })
 vim.keymap.set("n", "fs", conform.format, { desc = "Format buffer" })
 vim.keymap.set("n", "ff", builtin.find_files, { desc = "Telescope find files" })
 vim.keymap.set("n", "ff", builtin.find_files, { desc = "Telescope find files" })
