@@ -27,6 +27,7 @@ Plug("tpope/vim-sexp-mappings-for-regular-people", { ["commit"] = "cc5923e357373
 Plug("stevearc/conform.nvim", { ["commit"] = "e3263eabbfc1bdbc5b6a60ba8431b64e8dca0a79" })
 Plug("catppuccin/nvim", { ["commit"] = "637d99e638bc6f1efedac582f6ccab08badac0c6" })
 Plug("knsh14/vim-github-link", { ["commit"] = "9df238dbf150417772f2a1b7748750cfeda3d167" })
+Plug("xiyaowong/fast-cursor-move.nvim", { ["commit"] = "9ab80d0184861be18833647e983086725b9905f9" })
 
 vim.call("plug#end")
 require("nvim-surround").setup()
