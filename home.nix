@@ -53,6 +53,9 @@
         recursive = true;
         source = ./modules/nvim;
       };
+      ".cljfmt.edn" = {
+        source = ./modules/cljfmt.edn;
+      };
     };
   };
 }
