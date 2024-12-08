@@ -16,6 +16,7 @@
       (with pkgs; [
         jdk17
         clojure
+        postgresql
         cljfmt
         stylua
         rustup
