@@ -65,12 +65,12 @@ conform.setup({
 	},
 })
 
-vim.api.nvim_create_autocmd("BufWritePre", {
-	pattern = "*",
-	callback = function(args)
-		conform.format({ bufnr = args.buf, timeout_ms = 5000 })
-	end,
-})
+-- vim.api.nvim_create_autocmd("BufWritePre", {
+-- 	pattern = "*",
+-- 	callback = function(args)
+-- 		conform.format({ bufnr = args.buf, timeout_ms = 5000 })
+-- 	end,
+-- })
 
 conform.formatters.cljfmt = {
 	prepend_args = function(self, ctx)
@@ -115,6 +115,8 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
+vim.keymap.set("n", "fs", conform.format, { desc = "Format buffer" })
+vim.keymap.set("n", "ff", builtin.find_files, { desc = "Telescope find files" })
 vim.keymap.set("n", "ff", builtin.find_files, { desc = "Telescope find files" })
 vim.keymap.set("n", "fg", builtin.live_grep, { desc = "Telescope live grep" })
 vim.keymap.set("n", "fb", builtin.buffers, { desc = "Telescope buffers" })
