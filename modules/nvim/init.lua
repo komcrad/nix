@@ -16,6 +16,7 @@ Plug("hrsh7th/cmp-cmdline", { ["commit"] = "d250c63aa13ead745e3a40f61fdd3470efde
 Plug("hrsh7th/nvim-cmp", { ["commit"] = "f17d9b4394027ff4442b298398dfcaab97e40c4f" })
 Plug("hrsh7th/cmp-vsnip", { ["commit"] = "989a8a73c44e926199bfd05fa7a516d51f2d2752" })
 Plug("hrsh7th/vim-vsnip", { ["commit"] = "02a8e79295c9733434aab4e0e2b8c4b7cea9f3a9" })
+Plug("tpope/vim-dadbod", { ["commit"] = "fe5a55e92b2dded7c404006147ef97fb073d8b1b" })
 Plug("Olical/conjure", { ["commit"] = "bc8907e4ca572720a9f785660781450f8e79ef05" })
 Plug("tpope/vim-fugitive", { ["commit"] = "d4877e54cef67f5af4f950935b1ade19ed6b7370" })
 Plug("jiangmiao/auto-pairs", { ["commit"] = "39f06b873a8449af8ff6a3eee716d3da14d63a76" }) -- surround?
@@ -74,8 +75,41 @@ conform.formatters.cljfmt = {
 
 --vim.api.nvim_set_keymap("n", "ag", ":Rg <cr>", { noremap = true})
 --vim.api.nvim_set_keymap("n", "ff", ":Files <cr>", { noremap = true})
+
+vim.api.nvim_exec(
+	[[
+function! DBSend()
+  execute "normal vap\<Esc>"
+  execute ":'<,'>DB"
+endfunction
+]],
+	false
+)
+
 local builtin = require("telescope.builtin")
-vim.keymap.set("n", "cpp", ":ConjureEvalCurrentForm<cr>", { desc = "Eval current form" })
+
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "sql" }, -- Apply this only to SQL files
+	callback = function()
+		-- Create the keymap for selecting the paragraph and running :Db
+		vim.api.nvim_buf_set_keymap(0, "n", "cpp", ":call DBSend()<CR>", {
+			noremap = true,
+			silent = true,
+		})
+	end,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "clj", "cljc", "cljs" }, -- Apply this only to SQL files
+	callback = function()
+		-- Create the keymap for selecting the paragraph and running :Db
+		vim.api.nvim_buf_set_keymap(0, "n", "cpp", ":call ConjureEvalCurrentForm<CR>", {
+			noremap = true,
+			silent = true,
+		})
+	end,
+})
+
 vim.keymap.set("n", "ff", builtin.find_files, { desc = "Telescope find files" })
 vim.keymap.set("n", "fg", builtin.live_grep, { desc = "Telescope live grep" })
 vim.keymap.set("n", "fb", builtin.buffers, { desc = "Telescope buffers" })
