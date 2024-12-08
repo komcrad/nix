@@ -17,6 +17,7 @@ Plug("hrsh7th/nvim-cmp", { ["commit"] = "f17d9b4394027ff4442b298398dfcaab97e40c4
 Plug("hrsh7th/cmp-vsnip", { ["commit"] = "989a8a73c44e926199bfd05fa7a516d51f2d2752" })
 Plug("hrsh7th/vim-vsnip", { ["commit"] = "02a8e79295c9733434aab4e0e2b8c4b7cea9f3a9" })
 Plug("tpope/vim-dadbod", { ["commit"] = "fe5a55e92b2dded7c404006147ef97fb073d8b1b" })
+Plug("kristijanhusak/vim-dadbod-completion", { ["commit"] = "04485bfb53a629423233a4178d71cd4f8abf7406" })
 Plug("Olical/conjure", { ["commit"] = "bc8907e4ca572720a9f785660781450f8e79ef05" })
 Plug("tpope/vim-fugitive", { ["commit"] = "d4877e54cef67f5af4f950935b1ade19ed6b7370" })
 Plug("jiangmiao/auto-pairs", { ["commit"] = "39f06b873a8449af8ff6a3eee716d3da14d63a76" }) -- surround?
@@ -144,9 +145,12 @@ cmp.setup({
 		["<C-e>"] = cmp.mapping.abort(),
 		["<CR>"] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
 	}),
+
+	-- list of sources https://github.com/hrsh7th/nvim-cmp/wiki/List-of-sources
 	sources = cmp.config.sources({
 		{ name = "nvim_lsp" },
 		{ name = "vsnip" }, -- For vsnip users.
+		{ name = "vim-dadbod-completion" },
 		-- { name = 'luasnip' }, -- For luasnip users.
 		-- { name = 'ultisnips' }, -- For ultisnips users.
 		-- { name = 'snippy' }, -- For snippy users.
