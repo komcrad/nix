@@ -206,6 +206,10 @@ require("lspconfig")["clojure_lsp"].setup({
 	capabilities = capabilities,
 })
 
+require("lspconfig")["regols"].setup({
+	capabilities = capabilities,
+})
+
 vim.diagnostic.config({
 	virtual_text = true,
 	signs = false,

@@ -18,11 +18,13 @@
         clojure
         postgresql
         cljfmt
+        open-policy-agent
         stylua
         rustup
         gnupg
         black
         isort
+        regols
         leiningen
         ripgrep
         vscode
