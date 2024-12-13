@@ -20,9 +20,11 @@
         cljfmt
         open-policy-agent
         stylua
+        bazelisk
         rustup
         gnupg
         black
+        awscli2
         isort
         regols
         leiningen
@@ -57,6 +59,16 @@
       };
       ".cljfmt.edn" = {
         source = ./modules/cljfmt.edn;
+      };
+      #".zshrc" = {
+      #  source = ./modules/zshrc;
+      #};
+      "bin/bazel" = {
+      text = ''
+        #!/usr/bin/env bash
+
+        ${pkgs.bazelisk}/bin/bazelisk "$@"
+      '';
       };
     };
   };
