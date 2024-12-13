@@ -17,6 +17,7 @@
         jdk17
         clojure
         postgresql
+        bash-completion
         cljfmt
         open-policy-agent
         stylua
