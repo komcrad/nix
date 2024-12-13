@@ -60,9 +60,9 @@
       ".cljfmt.edn" = {
         source = ./modules/cljfmt.edn;
       };
-      #".zshrc" = {
-      #  source = ./modules/zshrc;
-      #};
+      ".zshrc" = {
+        source = ./modules/zshrc;
+      };
 
       "bin/bazel" = {
         executable = true;
