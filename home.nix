@@ -63,12 +63,14 @@
       #".zshrc" = {
       #  source = ./modules/zshrc;
       #};
-      "bin/bazel" = {
-      text = ''
-        #!/usr/bin/env bash
 
-        ${pkgs.bazelisk}/bin/bazelisk "$@"
-      '';
+      "bin/bazel" = {
+        executable = true;
+        text = ''
+          #!/usr/bin/env bash
+
+          ${pkgs.bazelisk}/bin/bazelisk "$@"
+        '';
       };
     };
   };
