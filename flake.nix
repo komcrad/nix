@@ -63,6 +63,19 @@
           ./mac.nix
         ];
       };
+      work = home-manager.lib.homeManagerConfiguration {
+        pkgs = import nixpkgs {
+          inherit system;
+        };
+        extraSpecialArgs = {
+          inherit unstable;
+        };
+        modules = [
+          mac-app-util.homeManagerModules.default
+          ./home.nix
+          ./work.nix
+        ];
+      };
     };
   };
 }
