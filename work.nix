@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{pkgs, unstable, ...}: {
   programs.kitty =
     import ./kitty.nix
     // {
@@ -8,6 +8,8 @@
       };
     };
   home = {
-    packages = [];
+    packages = with unstable; [
+        yarn
+    ];
   };
 }
