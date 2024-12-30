@@ -48,6 +48,7 @@ vim.api.nvim_create_autocmd("BufWritePost", {
 vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
 vim.opt.expandtab = true
+vim.opt.clipboard = "unnamedplus"
 
 vim.cmd.colorscheme("catppuccin")
 conform = require("conform")
