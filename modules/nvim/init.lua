@@ -48,6 +48,7 @@ vim.api.nvim_create_autocmd("BufWritePost", {
 vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
 vim.opt.expandtab = true
+vim.opt.clipboard = "unnamedplus"
 
 vim.cmd.colorscheme("catppuccin")
 conform = require("conform")
@@ -203,6 +204,10 @@ cmp.setup.cmdline(":", {
 -- Set up lspconfig.
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
 require("lspconfig")["clojure_lsp"].setup({
+	capabilities = capabilities,
+})
+
+require("lspconfig")["regols"].setup({
 	capabilities = capabilities,
 })
 

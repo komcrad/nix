@@ -17,12 +17,17 @@
         jdk17
         clojure
         postgresql
+        bash-completion
         cljfmt
+        open-policy-agent
         stylua
+        bazelisk
         rustup
         gnupg
         black
+        awscli2
         isort
+        regols
         leiningen
         ripgrep
         vscode
@@ -55,6 +60,29 @@
       };
       ".cljfmt.edn" = {
         source = ./modules/cljfmt.edn;
+      };
+      ".zshrc" = {
+        source = ./modules/zshrc;
+      };
+
+      "bin/bazel" = {
+        executable = true;
+        text = ''
+          #!/usr/bin/env bash
+
+          ${pkgs.bazelisk}/bin/bazelisk "$@"
+        '';
+      };
+      "bin/fix-docker" = {
+      executable = true;
+      text = ''
+        #!/usr/bin/env bash
+        colima stop
+        colima start
+        sudo rm /var/run/docker.sock
+        sudo ln ~/.colima/default/docker.sock /var/run
+      '';
+
       };
     };
   };
