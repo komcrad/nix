@@ -40,6 +40,7 @@
       ++ (with unstable; [
         neovim
         clojure-lsp
+        docker
       ]);
 
     # This needs to actually be set to your username

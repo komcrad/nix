@@ -3,7 +3,6 @@
   home = {
     packages = [
       unstable.colima
-      unstable.docker
     ];
   };
 }

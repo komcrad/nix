@@ -11,7 +11,6 @@
     packages = with unstable; [
         yarn
         colima
-        docker
     ];
   };
 }
