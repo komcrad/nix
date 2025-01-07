@@ -23,6 +23,10 @@
         stylua
         bazelisk
         rustup
+        gcc
+        csharp-ls
+        phpactor
+        cmake
         gnupg
         black
         awscli2
@@ -74,15 +78,14 @@
         '';
       };
       "bin/fix-docker" = {
-      executable = true;
-      text = ''
-        #!/usr/bin/env bash
-        colima stop
-        colima start
-        sudo rm /var/run/docker.sock
-        sudo ln ~/.colima/default/docker.sock /var/run
-      '';
-
+        executable = true;
+        text = ''
+          #!/usr/bin/env bash
+          colima stop
+          colima start
+          sudo rm /var/run/docker.sock
+          sudo ln ~/.colima/default/docker.sock /var/run
+        '';
       };
     };
   };
