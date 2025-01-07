@@ -11,6 +11,7 @@
     packages = with unstable; [
         yarn
         colima
+        aerospace
     ];
   };
 }

@@ -3,6 +3,7 @@
   home = {
     packages = [
       unstable.colima
+      unstable.aerospace
     ];
   };
 }
