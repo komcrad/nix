@@ -170,7 +170,9 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 vim.keymap.set("n", "gl", ":GetCommitLink", { desc = "Put github link on clipboard" })
-vim.keymap.set("n", "fs", conform.format, { desc = "Format buffer" })
+vim.keymap.set("n", "fs", function()
+	conform.format({ timeout_ms = 10000 })
+end, { desc = "Format buffer" })
 vim.keymap.set("n", "ff", builtin.find_files, { desc = "Telescope find files" })
 vim.keymap.set("n", "ff", builtin.find_files, { desc = "Telescope find files" })
 --vim.keymap.set("n", "fg", builtin.live_grep, { desc = "Telescope live grep" })
