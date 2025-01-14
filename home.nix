@@ -23,6 +23,10 @@
         stylua
         bazelisk
         rustup
+        gcc
+        csharp-ls
+        phpactor
+        cmake
         gnupg
         black
         awscli2
@@ -36,6 +40,7 @@
       ++ (with unstable; [
         neovim
         clojure-lsp
+        docker
       ]);
 
     # This needs to actually be set to your username
@@ -74,15 +79,14 @@
         '';
       };
       "bin/fix-docker" = {
-      executable = true;
-      text = ''
-        #!/usr/bin/env bash
-        colima stop
-        colima start
-        sudo rm /var/run/docker.sock
-        sudo ln ~/.colima/default/docker.sock /var/run
-      '';
-
+        executable = true;
+        text = ''
+          #!/usr/bin/env bash
+          colima stop
+          colima start
+          sudo rm /var/run/docker.sock
+          sudo ln ~/.colima/default/docker.sock /var/run
+        '';
       };
     };
   };
