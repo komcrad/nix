@@ -17,6 +17,7 @@
         jdk17
         clojure
         postgresql
+        mariadb
         bash-completion
         cljfmt
         open-policy-agent
