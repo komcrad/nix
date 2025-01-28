@@ -34,6 +34,7 @@ Plug(
 	{ ["do"] = "make", ["commit"] = "dae2eac9d91464448b584c7949a31df8faefec56" }
 )
 Plug("nvim-telescope/telescope-live-grep-args.nvim", { ["commit"] = "649b662a8f476fd2c0289570764459e95ebaa3f3" })
+Plug("nvim-telescope/telescope-frecency.nvim", { ["commit"] = "6e581bb7bea187fc03a4be3b252a8adecabc398a" })
 
 vim.call("plug#end")
 require("nvim-surround").setup()
@@ -144,6 +145,7 @@ telescope.setup({
 
 -- don't forget to load the extension
 telescope.load_extension("live_grep_args")
+telescope.load_extension("frecency")
 
 local builtin = require("telescope.builtin")
 
@@ -178,6 +180,7 @@ vim.keymap.set("n", "ff", builtin.find_files, { desc = "Telescope find files" })
 --vim.keymap.set("n", "fg", builtin.live_grep, { desc = "Telescope live grep" })
 vim.keymap.set("n", "fg", ":lua require('telescope').extensions.live_grep_args.live_grep_args()<CR>")
 vim.keymap.set("n", "fb", builtin.current_buffer_fuzzy_find, { desc = "Telescope buffers" })
+vim.keymap.set("n", "fr", ":Telescope frecency<CR>", { desc = "Telescope frecency" })
 vim.keymap.set("n", "fh", builtin.help_tags, { desc = "Telescope help tags" })
 vim.keymap.set("n", "gd", builtin.lsp_definitions, { desc = "Telescope go to lsp definitions" })
 vim.keymap.set("n", "gr", builtin.lsp_references, { desc = "Telescope references" })

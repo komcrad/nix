@@ -17,6 +17,7 @@
         jdk17
         clojure
         postgresql
+        mariadb
         bash-completion
         cljfmt
         open-policy-agent
@@ -41,6 +42,7 @@
         neovim
         clojure-lsp
         docker
+        docker-compose
       ]);
 
     # This needs to actually be set to your username
