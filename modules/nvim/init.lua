@@ -28,6 +28,7 @@ Plug("stevearc/conform.nvim", { ["commit"] = "e3263eabbfc1bdbc5b6a60ba8431b64e8d
 Plug("catppuccin/nvim", { ["commit"] = "637d99e638bc6f1efedac582f6ccab08badac0c6" })
 Plug("knsh14/vim-github-link", { ["commit"] = "9df238dbf150417772f2a1b7748750cfeda3d167" })
 Plug("xiyaowong/fast-cursor-move.nvim", { ["commit"] = "9ab80d0184861be18833647e983086725b9905f9" })
+Plug("sphamba/smear-cursor.nvim", { ["commit"] = "110f7d8771fff9dde6b2aa7e20c29bae8bb4d834" })
 --Plug('nvim-telescope/telescope-fzf-native.nvim', {['do'] = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release', ["commit"] = "dae2eac9d91464448b584c7949a31df8faefec56"})
 Plug(
 	"nvim-telescope/telescope-fzf-native.nvim",
@@ -188,6 +189,9 @@ vim.keymap.set("n", "gi", builtin.lsp_implementations, { desc = "Telescope refer
 vim.keymap.set("i", "jj", "<Esc>", { desc = "Escape" })
 vim.g.mapleader = ","
 vim.g.maplocalleader = ","
+vim.api.nvim_create_user_command("Rename", vim.lsp.buf.rename, {})
+vim.api.nvim_create_user_command("CursorSmear", require("smear_cursor").toggle, {})
+
 
 local cmp = require("cmp")
 cmp.setup({
