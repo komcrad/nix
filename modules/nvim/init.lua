@@ -73,6 +73,8 @@ conform.setup({
 		clojure = { "cljfmt" },
 
 		nix = { "alejandra" },
+
+		php = { "php_cs_fixer" },
 	},
 })
 
@@ -180,6 +182,7 @@ vim.keymap.set("n", "ff", builtin.find_files, { desc = "Telescope find files" })
 vim.keymap.set("n", "ff", builtin.find_files, { desc = "Telescope find files" })
 --vim.keymap.set("n", "fg", builtin.live_grep, { desc = "Telescope live grep" })
 vim.keymap.set("n", "fg", ":lua require('telescope').extensions.live_grep_args.live_grep_args()<CR>")
+vim.keymap.set("n", "fw", builtin.buffers, { desc = "Telescope buffers" })
 vim.keymap.set("n", "fb", builtin.current_buffer_fuzzy_find, { desc = "Telescope buffers" })
 vim.keymap.set("n", "fr", ":Telescope frecency<CR>", { desc = "Telescope frecency" })
 vim.keymap.set("n", "fh", builtin.help_tags, { desc = "Telescope help tags" })
@@ -191,7 +194,6 @@ vim.g.mapleader = ","
 vim.g.maplocalleader = ","
 vim.api.nvim_create_user_command("Rename", vim.lsp.buf.rename, {})
 vim.api.nvim_create_user_command("CursorSmear", require("smear_cursor").toggle, {})
-
 
 local cmp = require("cmp")
 cmp.setup({
@@ -267,6 +269,15 @@ local capabilities = require("cmp_nvim_lsp").default_capabilities()
 require("lspconfig")["clojure_lsp"].setup({
 	capabilities = capabilities,
 })
+
+settings = {
+	intelephense = {
+		files = {
+			maxSize = 1000000,
+		},
+	},
+}
+require("lspconfig").intelephense.setup({})
 
 require("lspconfig")["regols"].setup({
 	capabilities = capabilities,

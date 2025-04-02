@@ -10,6 +10,7 @@
     builtins.elem (lib.getName pkg) [
       "vscode"
       "nvidia"
+      "intelephense"
     ];
   home = {
     packages =
@@ -28,7 +29,6 @@
         csharp-ls
         phpactor
         cmake
-        gnupg
         black
         awscli2
         isort
@@ -37,9 +37,15 @@
         ripgrep
         vscode
         alejandra
+        intelephense
       ])
       ++ (with unstable; [
+        clj-kondo
+        libiconv
         neovim
+        neovide
+        gnupg
+        caddy
         clojure-lsp
         docker
         docker-compose
