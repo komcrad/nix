@@ -274,8 +274,8 @@ settings = {
 	intelephense = {
 		files = {
 			maxSize = 1000000,
-		},
-	},
+		};
+	};
 }
 require("lspconfig").intelephense.setup({})
 
@@ -284,7 +284,6 @@ require("lspconfig")["regols"].setup({
 })
 
 require("lspconfig").csharp_ls.setup({})
-require("lspconfig").phpactor.setup({})
 
 vim.diagnostic.config({
 	virtual_text = true,
