@@ -46,6 +46,7 @@
         neovide
         gnupg
         caddy
+        screen
         clojure-lsp
         docker
         docker-compose
