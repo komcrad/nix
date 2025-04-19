@@ -24,7 +24,7 @@ Plug("jiangmiao/auto-pairs", { ["commit"] = "39f06b873a8449af8ff6a3eee716d3da14d
 --Plug("kylechui/nvim-surround", { ["commit"] = "dca2e998ff26681ee422b92c6ed39b3d2908d8a9" }) -- surround?
 --Plug("guns/vim-sexp", { ["commit"] = "14464d4580af43424ed8f2614d94e62bfa40bb4d" })
 --Plug("tpope/vim-sexp-mappings-for-regular-people", { ["commit"] = "cc5923e357373ea6ef0c13eae82f44e6b9b1d374" })
---Plug("PaterJason/nvim-treesitter-sexp", { ["commit"] = "32509f4071f9c8ba5655bf2e1ccf1f1cd8447da0" }) 
+--Plug("PaterJason/nvim-treesitter-sexp", { ["commit"] = "32509f4071f9c8ba5655bf2e1ccf1f1cd8447da0" })
 -- use frankitox fork until PaterJason's is fixed for nvim 11
 Plug("frankitox/nvim-treesitter-sexp", { ["commit"] = "a37fe6e6367ed314f8a4e12134f622adac9e0d3f" })
 Plug("nvim-treesitter/nvim-treesitter", { ["do"] = ":TSUpdate" })
@@ -247,14 +247,17 @@ vim.keymap.set("n", "gr", builtin.lsp_references, { desc = "Telescope references
 vim.keymap.set("n", "gi", builtin.lsp_implementations, { desc = "Telescope references" })
 vim.keymap.set("i", "jj", "<Esc>", { desc = "Escape" })
 
-vim.keymap.set({ "n" }, "<LocalLeader>w", "saie)", { remap = true, desc = "Surround WORD with ()" })
-vim.keymap.set({ "n" }, "<LocalLeader>W", "saie)<I", { remap = true, desc = "Surround WORD with ()" })
-vim.keymap.set({ "n" }, "<LocalLeader>i", "saif)((<I", { remap = true, desc = "Surround WORD with ()" })
-vim.keymap.set({ "n" }, "<LocalLeader>I",  "saif)))>I ", { remap = true, desc = "Surround WORD with ()" })
-vim.keymap.set({ "n" }, "<LocalLeader>w", "saie)", { remap = true, desc = "Surround WORD with ()" })
-vim.keymap.set({ "n" }, "<LocalLeader>W", "saie)<I", { remap = true, desc = "Surround WORD with ()" })
-vim.keymap.set({ "n" }, "<LocalLeader>e[", "saie]", { remap = true })
-vim.keymap.set({ "n" }, "<LocalLeader>e{", "saie}", { remap = true })
+vim.keymap.set({ "n" }, "<LocalLeader>w", "saie)", { remap = true, desc = "Surround element with ()" })
+vim.keymap.set(
+	{ "n" },
+	"<LocalLeader>W",
+	"saie)<I",
+	{ remap = true, desc = "Surround element with ( ) but go into insert mode" }
+)
+vim.keymap.set({ "n" }, "<LocalLeader>i", "saif)((<I", { remap = true, desc = "Surround form with ()" })
+vim.keymap.set({ "n" }, "<LocalLeader>I", "saif)))>I ", { remap = true, desc = "Surround form with ()" })
+vim.keymap.set({ "n" }, "<LocalLeader>e[", "saie]", { remap = true, desc = "Surround element with []" })
+vim.keymap.set({ "n" }, "<LocalLeader>e{", "saie}", { remap = true, desc = "Surround element with {}" })
 
 local cmp = require("cmp")
 cmp.setup({
