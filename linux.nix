@@ -2,9 +2,11 @@
   nixgl,
   unstable,
   config,
+  pkgs,
   ...
 }: {
   nixGL.packages = nixgl.packages;
+
   programs.kitty =
     import ./kitty.nix
     // {
@@ -12,7 +14,8 @@
     };
 
   home = {
-    packages = [
+    packages = with pkgs; [
+      ollama-cuda
     ];
   };
 }

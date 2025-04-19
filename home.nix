@@ -11,11 +11,15 @@
       "vscode"
       "nvidia"
       "intelephense"
+      "cuda_cudart"
+      "libcublas"
+      "cuda_cccl"
+      "cuda_nvcc"
     ];
   home = {
     packages =
       (with pkgs; [
-        jdk17
+        jdk21
         clojure
         postgresql
         mariadb
