@@ -21,9 +21,14 @@ Plug("kristijanhusak/vim-dadbod-completion", { ["commit"] = "04485bfb53a62942323
 Plug("Olical/conjure", { ["commit"] = "bc8907e4ca572720a9f785660781450f8e79ef05" })
 Plug("tpope/vim-fugitive", { ["commit"] = "d4877e54cef67f5af4f950935b1ade19ed6b7370" })
 Plug("jiangmiao/auto-pairs", { ["commit"] = "39f06b873a8449af8ff6a3eee716d3da14d63a76" }) -- surround?
-Plug("kylechui/nvim-surround", { ["commit"] = "dca2e998ff26681ee422b92c6ed39b3d2908d8a9" }) -- surround?
-Plug("guns/vim-sexp", { ["commit"] = "14464d4580af43424ed8f2614d94e62bfa40bb4d" })
-Plug("tpope/vim-sexp-mappings-for-regular-people", { ["commit"] = "cc5923e357373ea6ef0c13eae82f44e6b9b1d374" })
+--Plug("kylechui/nvim-surround", { ["commit"] = "dca2e998ff26681ee422b92c6ed39b3d2908d8a9" }) -- surround?
+--Plug("guns/vim-sexp", { ["commit"] = "14464d4580af43424ed8f2614d94e62bfa40bb4d" })
+--Plug("tpope/vim-sexp-mappings-for-regular-people", { ["commit"] = "cc5923e357373ea6ef0c13eae82f44e6b9b1d374" })
+--Plug("PaterJason/nvim-treesitter-sexp", { ["commit"] = "32509f4071f9c8ba5655bf2e1ccf1f1cd8447da0" }) 
+-- use frankitox fork until PaterJason's is fixed for nvim 11
+Plug("frankitox/nvim-treesitter-sexp", { ["commit"] = "a37fe6e6367ed314f8a4e12134f622adac9e0d3f" })
+Plug("nvim-treesitter/nvim-treesitter", { ["do"] = ":TSUpdate" })
+Plug("echasnovski/mini.surround", { ["commit"] = "5aab42fcdcf31fa010f012771eda5631c077840a" })
 Plug("stevearc/conform.nvim", { ["commit"] = "e3263eabbfc1bdbc5b6a60ba8431b64e8dca0a79" })
 Plug("catppuccin/nvim", { ["commit"] = "637d99e638bc6f1efedac582f6ccab08badac0c6" })
 Plug("knsh14/vim-github-link", { ["commit"] = "9df238dbf150417772f2a1b7748750cfeda3d167" })
@@ -38,7 +43,53 @@ Plug("nvim-telescope/telescope-live-grep-args.nvim", { ["commit"] = "649b662a8f4
 Plug("nvim-telescope/telescope-frecency.nvim", { ["commit"] = "6e581bb7bea187fc03a4be3b252a8adecabc398a" })
 
 vim.call("plug#end")
-require("nvim-surround").setup()
+--require("nvim-surround").setup()
+
+require("mini.surround").setup()
+require("treesitter-sexp").setup({
+	-- Enable/disable
+	enabled = true,
+	-- Move cursor when applying commands
+	set_cursor = true,
+	-- Set to false to disable all keymaps
+	keymaps = {
+		-- Set to false to disable keymap type
+		commands = {
+			-- Set to false to disable individual keymaps
+			swap_prev_elem = "<e",
+			swap_next_elem = ">e",
+			swap_prev_form = "<f",
+			swap_next_form = ">f",
+			promote_elem = "<LocalLeader>O",
+			promote_form = "<LocalLeader>o",
+			splice = "<LocalLeader>@",
+			slurp_left = "<(",
+			slurp_right = ">)",
+			barf_left = ">(",
+			barf_right = "<)",
+			insert_head = "<I",
+			insert_tail = ">I",
+		},
+		motions = {
+			form_start = "(",
+			form_end = ")",
+			prev_elem = "[e",
+			next_elem = "]e",
+			prev_elem_end = "[E",
+			next_elem_end = "]E",
+			prev_top_level = "[[",
+			next_top_level = "]]",
+		},
+		textobjects = {
+			inner_elem = "ie",
+			outer_elem = "ae",
+			inner_form = "if",
+			outer_form = "af",
+			inner_top_level = "iF",
+			outer_top_level = "aF",
+		},
+	},
+})
 
 vim.api.nvim_create_user_command("ClojureReload", function()
 	vim.g.clojure_reload = true
@@ -174,6 +225,11 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
+vim.g.mapleader = ","
+vim.g.maplocalleader = ","
+vim.api.nvim_create_user_command("Rename", vim.lsp.buf.rename, {})
+vim.api.nvim_create_user_command("CursorSmear", require("smear_cursor").toggle, {})
+
 vim.keymap.set("n", "gl", ":GetCommitLink", { desc = "Put github link on clipboard" })
 vim.keymap.set("n", "fs", function()
 	conform.format({ timeout_ms = 10000 })
@@ -190,10 +246,15 @@ vim.keymap.set("n", "gd", builtin.lsp_definitions, { desc = "Telescope go to lsp
 vim.keymap.set("n", "gr", builtin.lsp_references, { desc = "Telescope references" })
 vim.keymap.set("n", "gi", builtin.lsp_implementations, { desc = "Telescope references" })
 vim.keymap.set("i", "jj", "<Esc>", { desc = "Escape" })
-vim.g.mapleader = ","
-vim.g.maplocalleader = ","
-vim.api.nvim_create_user_command("Rename", vim.lsp.buf.rename, {})
-vim.api.nvim_create_user_command("CursorSmear", require("smear_cursor").toggle, {})
+
+vim.keymap.set({ "n" }, "<LocalLeader>w", "saie)", { remap = true, desc = "Surround WORD with ()" })
+vim.keymap.set({ "n" }, "<LocalLeader>W", "saie)<I", { remap = true, desc = "Surround WORD with ()" })
+vim.keymap.set({ "n" }, "<LocalLeader>i", "saif)((<I", { remap = true, desc = "Surround WORD with ()" })
+vim.keymap.set({ "n" }, "<LocalLeader>I",  "saif)))>I ", { remap = true, desc = "Surround WORD with ()" })
+vim.keymap.set({ "n" }, "<LocalLeader>w", "saie)", { remap = true, desc = "Surround WORD with ()" })
+vim.keymap.set({ "n" }, "<LocalLeader>W", "saie)<I", { remap = true, desc = "Surround WORD with ()" })
+vim.keymap.set({ "n" }, "<LocalLeader>e[", "saie]", { remap = true })
+vim.keymap.set({ "n" }, "<LocalLeader>e{", "saie}", { remap = true })
 
 local cmp = require("cmp")
 cmp.setup({
@@ -274,8 +335,8 @@ settings = {
 	intelephense = {
 		files = {
 			maxSize = 1000000,
-		};
-	};
+		},
+	},
 }
 require("lspconfig").intelephense.setup({})
 
