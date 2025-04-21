@@ -31,7 +31,6 @@
     system = "x86_64-linux";
     #system = "aarch64-linux";
     #system = "aarch64-darwin";
-    unstable = import nixpkgs-unstable {inherit system;};
     unstable = import nixpkgs-unstable {
       inherit system;
       config.allowUnfreePredicate = pkg:
