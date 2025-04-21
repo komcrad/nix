@@ -332,6 +332,9 @@ cmp.setup.cmdline(":", {
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
 require("lspconfig")["clojure_lsp"].setup({
 	capabilities = capabilities,
+	flags = {
+		debounce_text_changes = 500,
+	},
 })
 
 settings = {

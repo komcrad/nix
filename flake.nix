@@ -32,6 +32,14 @@
     #system = "aarch64-linux";
     #system = "aarch64-darwin";
     unstable = import nixpkgs-unstable {inherit system;};
+    unstable = import nixpkgs-unstable {
+      inherit system;
+      config.allowUnfreePredicate = pkg:
+        builtins.elem (lib.getName pkg) [
+          "snowsql"
+          "intelephense"
+        ];
+    };
   in {
     defaultPackage.x86_64-linux = home-manager.defaultPackage.x86_64-linux;
     defaultPackage.aarch64-linux = home-manager.defaultPackage.aarch64-linux;

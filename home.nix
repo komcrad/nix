@@ -10,7 +10,6 @@
     builtins.elem (lib.getName pkg) [
       "vscode"
       "nvidia"
-      "intelephense"
       "cuda_cudart"
       "libcublas"
       "cuda_cccl"
@@ -41,11 +40,11 @@
         ripgrep
         vscode
         alejandra
-        intelephense
       ])
       ++ (with unstable; [
         clj-kondo
         libiconv
+        intelephense
         neovim
         neovide
         gnupg
