@@ -113,6 +113,7 @@ vim.cmd.colorscheme("catppuccin")
 conform = require("conform")
 conform.setup({
 	formatters_by_ft = {
+		mermaid = { "prettierd" },
 		lua = { "stylua" },
 		-- Conform will run multiple formatters sequentially
 		python = { "isort", "black" },
@@ -227,7 +228,10 @@ vim.api.nvim_create_autocmd("FileType", {
 
 vim.g.mapleader = ","
 vim.g.maplocalleader = ","
-vim.api.nvim_create_user_command("Rename", vim.lsp.buf.rename, {})
+vim.api.nvim_create_user_command("Rename", function()
+	vim.lsp.buf.rename()
+	vim.cmd("wa")
+end, {})
 vim.api.nvim_create_user_command("CursorSmear", require("smear_cursor").toggle, {})
 
 vim.keymap.set("n", "gl", ":GetCommitLink", { desc = "Put github link on clipboard" })
@@ -240,6 +244,12 @@ vim.keymap.set("n", "ff", builtin.find_files, { desc = "Telescope find files" })
 vim.keymap.set("n", "fg", ":lua require('telescope').extensions.live_grep_args.live_grep_args()<CR>")
 vim.keymap.set("n", "fw", builtin.buffers, { desc = "Telescope buffers" })
 vim.keymap.set("n", "fb", builtin.current_buffer_fuzzy_find, { desc = "Telescope buffers" })
+vim.keymap.set(
+	"n",
+	"fi",
+	":lua require('telescope.builtin').grep_string({search = vim.fn.expand('<cword>')})<cr>",
+	{ desc = "Telescope search current word" }
+)
 vim.keymap.set("n", "fr", ":Telescope frecency<CR>", { desc = "Telescope frecency" })
 vim.keymap.set("n", "fh", builtin.help_tags, { desc = "Telescope help tags" })
 vim.keymap.set("n", "gd", builtin.lsp_definitions, { desc = "Telescope go to lsp definitions" })
@@ -336,6 +346,8 @@ require("lspconfig")["clojure_lsp"].setup({
 		debounce_text_changes = 500,
 	},
 })
+
+vim.lsp.enable("terraformls")
 
 settings = {
 	intelephense = {

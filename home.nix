@@ -42,6 +42,12 @@
         alejandra
       ])
       ++ (with unstable; [
+        cljstyle
+        geckodriver
+        chromedriver
+        prettierd
+        terraform-ls
+        nodejs_20
         clj-kondo
         libiconv
         intelephense
