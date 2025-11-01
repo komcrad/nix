@@ -3,9 +3,11 @@
   unstable,
   config,
   pkgs,
+  lib,
   ...
 }: {
-  nixGL.packages = nixgl.packages;
+  nixGL.packages = nixgl;
+  nixGL.defaultWrapper = "nvidia";
 
   programs.kitty =
     import ./kitty.nix

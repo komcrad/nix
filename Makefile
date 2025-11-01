@@ -1,6 +1,6 @@
 .PHONY: linux
 linux:
-	nix run home-manager/release-24.11 -- switch --flake .#linux
+	nix run home-manager/release-24.11 -- switch --flake .#linux --impure
 
 .PHONY: mac
 mac:
