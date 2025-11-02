@@ -18,7 +18,6 @@
   home = {
     packages =
       (with pkgs; [
-        jdk21
         clojure
         postgresql
         mariadb
@@ -28,7 +27,6 @@
         stylua
         bazelisk
         rustup
-        gcc
         csharp-ls
         phpactor
         cmake
@@ -42,6 +40,8 @@
         alejandra
       ])
       ++ (with unstable; [
+        zulu24
+        gcc
         cljstyle
         geckodriver
         chromedriver
