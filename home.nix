@@ -56,6 +56,9 @@
         intelephense
         neovim
         neovide
+        babashka
+        bbin
+        parinfer-rust
         gnupg
         caddy
         screen
@@ -108,6 +111,67 @@
           sudo rm /var/run/docker.sock
           sudo ln ~/.colima/default/docker.sock /var/run
         '';
+      };
+      "bin/setup-clojure-mcp" = {
+        executable = true;
+        text = ''
+          #!/usr/bin/env bash
+          set -e
+
+          echo "Installing clojure-mcp-light tools via bbin..."
+
+          # Install the Claude Code hook for paren repair
+          bbin install https://github.com/bhauman/clojure-mcp-light.git --tag v0.2.1
+
+          # Install nREPL eval tool
+          bbin install https://github.com/bhauman/clojure-mcp-light.git --tag v0.2.1 \
+            --as clj-nrepl-eval \
+            --main-opts '["-m" "clojure-mcp-light.nrepl-eval"]'
+
+          # Install paren repair CLI tool
+          bbin install https://github.com/bhauman/clojure-mcp-light.git --tag v0.2.1 \
+            --as clj-paren-repair \
+            --main-opts '["-m" "clojure-mcp-light.paren-repair"]'
+
+          echo ""
+          echo "clojure-mcp-light tools installed successfully!"
+          echo ""
+          echo "Available commands:"
+          echo "  clj-paren-repair-claude-hook - Hook for Claude Code Write/Edit operations"
+          echo "  clj-nrepl-eval               - Evaluate code against an nREPL"
+          echo "  clj-paren-repair             - CLI tool for delimiter repair"
+          echo ""
+          echo "Claude Code settings have been configured at ~/.claude/settings.json"
+          echo "Start an nREPL in your project and Claude can evaluate code against it."
+        '';
+      };
+      ".claude/settings.json" = {
+        text = builtins.toJSON {
+          hooks = {
+            PreToolUse = [
+              {
+                matcher = "Write|Edit";
+                hooks = [
+                  {
+                    type = "command";
+                    command = "clj-paren-repair-claude-hook --format pre $TOOL_INPUT";
+                  }
+                ];
+              }
+            ];
+            PostToolUse = [
+              {
+                matcher = "Write|Edit";
+                hooks = [
+                  {
+                    type = "command";
+                    command = "clj-paren-repair-claude-hook --format post $TOOL_INPUT";
+                  }
+                ];
+              }
+            ];
+          };
+        };
       };
     };
   };
