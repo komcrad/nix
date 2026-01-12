@@ -40,7 +40,10 @@
         alejandra
       ])
       ++ (with unstable; [
-        zulu24
+        logseq
+        sops
+        age
+        zulu21
         gcc
         cljstyle
         geckodriver
