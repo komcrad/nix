@@ -15,7 +15,6 @@
     };
     nixgl = {
       url = "github:nix-community/nixGL";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
@@ -31,7 +30,22 @@
     system = "x86_64-linux";
     #system = "aarch64-linux";
     #system = "aarch64-darwin";
-    unstable = import nixpkgs-unstable {inherit system;};
+    unstable = import nixpkgs-unstable {
+      inherit system;
+      config.allowUnfreePredicate = pkg:
+        builtins.elem (lib.getName pkg) [
+          "snowsql"
+          "intelephense"
+        ];
+    };
+    nixgl-pkgs = import nixgl.inputs.nixpkgs {
+      inherit system;
+      config.allowUnfree = true;
+    };
+
+    nixgl-custom = import nixgl {
+      pkgs = nixgl-pkgs;
+    };
   in {
     defaultPackage.x86_64-linux = home-manager.defaultPackage.x86_64-linux;
     defaultPackage.aarch64-linux = home-manager.defaultPackage.aarch64-linux;
@@ -40,10 +54,11 @@
       linux = home-manager.lib.homeManagerConfiguration {
         pkgs = import nixpkgs {
           inherit system;
+          config.allowUnfree = true;
         };
         extraSpecialArgs = {
           inherit unstable;
-          inherit nixgl;
+          nixgl = (import nixgl { pkgs = nixgl-pkgs; });
         };
         modules = [
           ./home.nix

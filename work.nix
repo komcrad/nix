@@ -13,7 +13,7 @@
     };
   home = {
     packages = let
-      php' = pkgs.php82.buildEnv {
+      php' = pkgs.php83.buildEnv {
         extensions = {
           enabled,
           all,

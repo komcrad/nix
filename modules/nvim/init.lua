@@ -7,6 +7,7 @@ vim.call("plug#begin")
 -- Plug('junegunn/fzf.vim')
 -- Plug('junegunn/fzf-lsp.vim')
 Plug("nvim-lua/plenary.nvim", { ["commit"] = "2d9b06177a975543726ce5c73fca176cedbffe9d" })
+Plug("greggh/claude-code.nvim", { ["commit"] = "c9a31e51069977edaad9560473b5d031fcc5d38b" })
 Plug("nvim-telescope/telescope.nvim", { ["commit"] = "85922dde3767e01d42a08e750a773effbffaea3e" })
 Plug("neovim/nvim-lspconfig", { ["commit"] = "d01864641c6e43c681c3e9f6cf4745c75fdd9dcc" })
 Plug("hrsh7th/cmp-nvim-lsp", { ["commit"] = "39e2eda76828d88b773cc27a3f61d2ad782c922d" })
@@ -21,9 +22,14 @@ Plug("kristijanhusak/vim-dadbod-completion", { ["commit"] = "04485bfb53a62942323
 Plug("Olical/conjure", { ["commit"] = "bc8907e4ca572720a9f785660781450f8e79ef05" })
 Plug("tpope/vim-fugitive", { ["commit"] = "d4877e54cef67f5af4f950935b1ade19ed6b7370" })
 Plug("jiangmiao/auto-pairs", { ["commit"] = "39f06b873a8449af8ff6a3eee716d3da14d63a76" }) -- surround?
-Plug("kylechui/nvim-surround", { ["commit"] = "dca2e998ff26681ee422b92c6ed39b3d2908d8a9" }) -- surround?
-Plug("guns/vim-sexp", { ["commit"] = "14464d4580af43424ed8f2614d94e62bfa40bb4d" })
-Plug("tpope/vim-sexp-mappings-for-regular-people", { ["commit"] = "cc5923e357373ea6ef0c13eae82f44e6b9b1d374" })
+--Plug("kylechui/nvim-surround", { ["commit"] = "dca2e998ff26681ee422b92c6ed39b3d2908d8a9" }) -- surround?
+--Plug("guns/vim-sexp", { ["commit"] = "14464d4580af43424ed8f2614d94e62bfa40bb4d" })
+--Plug("tpope/vim-sexp-mappings-for-regular-people", { ["commit"] = "cc5923e357373ea6ef0c13eae82f44e6b9b1d374" })
+--Plug("PaterJason/nvim-treesitter-sexp", { ["commit"] = "32509f4071f9c8ba5655bf2e1ccf1f1cd8447da0" })
+-- use frankitox fork until PaterJason's is fixed for nvim 11
+Plug("frankitox/nvim-treesitter-sexp", { ["commit"] = "a37fe6e6367ed314f8a4e12134f622adac9e0d3f" })
+Plug("nvim-treesitter/nvim-treesitter", { ["do"] = ":TSUpdate" })
+Plug("echasnovski/mini.surround", { ["commit"] = "5aab42fcdcf31fa010f012771eda5631c077840a" })
 Plug("stevearc/conform.nvim", { ["commit"] = "e3263eabbfc1bdbc5b6a60ba8431b64e8dca0a79" })
 Plug("catppuccin/nvim", { ["commit"] = "637d99e638bc6f1efedac582f6ccab08badac0c6" })
 Plug("knsh14/vim-github-link", { ["commit"] = "9df238dbf150417772f2a1b7748750cfeda3d167" })
@@ -38,7 +44,53 @@ Plug("nvim-telescope/telescope-live-grep-args.nvim", { ["commit"] = "649b662a8f4
 Plug("nvim-telescope/telescope-frecency.nvim", { ["commit"] = "6e581bb7bea187fc03a4be3b252a8adecabc398a" })
 
 vim.call("plug#end")
-require("nvim-surround").setup()
+--require("nvim-surround").setup()
+
+require("mini.surround").setup()
+require("treesitter-sexp").setup({
+	-- Enable/disable
+	enabled = true,
+	-- Move cursor when applying commands
+	set_cursor = true,
+	-- Set to false to disable all keymaps
+	keymaps = {
+		-- Set to false to disable keymap type
+		commands = {
+			-- Set to false to disable individual keymaps
+			swap_prev_elem = "<e",
+			swap_next_elem = ">e",
+			swap_prev_form = "<f",
+			swap_next_form = ">f",
+			promote_elem = "<LocalLeader>O",
+			promote_form = "<LocalLeader>o",
+			splice = "<LocalLeader>@",
+			slurp_left = "<(",
+			slurp_right = ">)",
+			barf_left = ">(",
+			barf_right = "<)",
+			insert_head = "<I",
+			insert_tail = ">I",
+		},
+		motions = {
+			form_start = "(",
+			form_end = ")",
+			prev_elem = "[e",
+			next_elem = "]e",
+			prev_elem_end = "[E",
+			next_elem_end = "]E",
+			prev_top_level = "[[",
+			next_top_level = "]]",
+		},
+		textobjects = {
+			inner_elem = "ie",
+			outer_elem = "ae",
+			inner_form = "if",
+			outer_form = "af",
+			inner_top_level = "iF",
+			outer_top_level = "aF",
+		},
+	},
+})
 
 vim.api.nvim_create_user_command("ClojureReload", function()
 	vim.g.clojure_reload = true
@@ -62,17 +114,22 @@ vim.cmd.colorscheme("catppuccin")
 conform = require("conform")
 conform.setup({
 	formatters_by_ft = {
+		mermaid = { "prettierd" },
 		lua = { "stylua" },
 		-- Conform will run multiple formatters sequentially
 		python = { "isort", "black" },
 		-- You can customize some of the format options for the filetype (:help conform.format)
 		rust = { "rustfmt", lsp_format = "fallback" },
 		-- Conform will run the first available formatter
-		javascript = { "prettierd", "prettier", stop_after_first = true },
+		javascript = { lsp_format = "never", "eslint_d", "prettierd", "prettier", stop_after_first = true },
+		typescript = { lsp_format = "never", "prettierd", stop_after_first = true },
+		typescriptreact = { lsp_format = "never", "prettierd", stop_after_first = true },
 
 		clojure = { "cljfmt" },
 
 		nix = { "alejandra" },
+
+		php = { "php_cs_fixer" },
 	},
 })
 
@@ -172,6 +229,14 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
+vim.g.mapleader = ","
+vim.g.maplocalleader = ","
+vim.api.nvim_create_user_command("Rename", function()
+	vim.lsp.buf.rename()
+	vim.cmd("wa")
+end, {})
+vim.api.nvim_create_user_command("CursorSmear", require("smear_cursor").toggle, {})
+
 vim.keymap.set("n", "gl", ":GetCommitLink", { desc = "Put github link on clipboard" })
 vim.keymap.set("n", "fs", function()
 	conform.format({ timeout_ms = 10000 })
@@ -180,18 +245,32 @@ vim.keymap.set("n", "ff", builtin.find_files, { desc = "Telescope find files" })
 vim.keymap.set("n", "ff", builtin.find_files, { desc = "Telescope find files" })
 --vim.keymap.set("n", "fg", builtin.live_grep, { desc = "Telescope live grep" })
 vim.keymap.set("n", "fg", ":lua require('telescope').extensions.live_grep_args.live_grep_args()<CR>")
+vim.keymap.set("n", "fw", builtin.buffers, { desc = "Telescope buffers" })
 vim.keymap.set("n", "fb", builtin.current_buffer_fuzzy_find, { desc = "Telescope buffers" })
+vim.keymap.set(
+	"n",
+	"fi",
+	":lua require('telescope.builtin').grep_string({search = vim.fn.expand('<cword>')})<cr>",
+	{ desc = "Telescope search current word" }
+)
 vim.keymap.set("n", "fr", ":Telescope frecency<CR>", { desc = "Telescope frecency" })
 vim.keymap.set("n", "fh", builtin.help_tags, { desc = "Telescope help tags" })
 vim.keymap.set("n", "gd", builtin.lsp_definitions, { desc = "Telescope go to lsp definitions" })
 vim.keymap.set("n", "gr", builtin.lsp_references, { desc = "Telescope references" })
 vim.keymap.set("n", "gi", builtin.lsp_implementations, { desc = "Telescope references" })
 vim.keymap.set("i", "jj", "<Esc>", { desc = "Escape" })
-vim.g.mapleader = ","
-vim.g.maplocalleader = ","
-vim.api.nvim_create_user_command("Rename", vim.lsp.buf.rename, {})
-vim.api.nvim_create_user_command("CursorSmear", require("smear_cursor").toggle, {})
 
+vim.keymap.set({ "n" }, "<LocalLeader>w", "saie)", { remap = true, desc = "Surround element with ()" })
+vim.keymap.set(
+	{ "n" },
+	"<LocalLeader>W",
+	"saie)<I",
+	{ remap = true, desc = "Surround element with ( ) but go into insert mode" }
+)
+vim.keymap.set({ "n" }, "<LocalLeader>i", "saif)((<I", { remap = true, desc = "Surround form with ()" })
+vim.keymap.set({ "n" }, "<LocalLeader>I", "saif)))>I ", { remap = true, desc = "Surround form with ()" })
+vim.keymap.set({ "n" }, "<LocalLeader>e[", "saie]", { remap = true, desc = "Surround element with []" })
+vim.keymap.set({ "n" }, "<LocalLeader>e{", "saie}", { remap = true, desc = "Surround element with {}" })
 
 local cmp = require("cmp")
 cmp.setup({
@@ -266,17 +345,92 @@ cmp.setup.cmdline(":", {
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
 require("lspconfig")["clojure_lsp"].setup({
 	capabilities = capabilities,
+	flags = {
+		debounce_text_changes = 500,
+	},
 })
+
+vim.lsp.enable("terraformls")
+
+settings = {
+	intelephense = {
+		files = {
+			maxSize = 1000000,
+		},
+	},
+}
+require("lspconfig").intelephense.setup({})
 
 require("lspconfig")["regols"].setup({
 	capabilities = capabilities,
 })
 
 require("lspconfig").csharp_ls.setup({})
-require("lspconfig").phpactor.setup({})
 
 vim.diagnostic.config({
 	virtual_text = true,
 	signs = false,
 	underline = false,
+})
+
+require("claude-code").setup({
+	-- Terminal window settings
+	window = {
+		split_ratio = 0.3, -- Percentage of screen for the terminal window (height for horizontal, width for vertical splits)
+		position = "botright", -- Position of the window: "botright", "topleft", "vertical", "float", etc.
+		enter_insert = true, -- Whether to enter insert mode when opening Claude Code
+		hide_numbers = true, -- Hide line numbers in the terminal window
+		hide_signcolumn = true, -- Hide the sign column in the terminal window
+
+		-- Floating window configuration (only applies when position = "float")
+		float = {
+			width = "80%", -- Width: number of columns or percentage string
+			height = "80%", -- Height: number of rows or percentage string
+			row = "center", -- Row position: number, "center", or percentage string
+			col = "center", -- Column position: number, "center", or percentage string
+			relative = "editor", -- Relative to: "editor" or "cursor"
+			border = "rounded", -- Border style: "none", "single", "double", "rounded", "solid", "shadow"
+		},
+	},
+	-- File refresh settings
+	refresh = {
+		enable = true, -- Enable file change detection
+		updatetime = 100, -- updatetime when Claude Code is active (milliseconds)
+		timer_interval = 1000, -- How often to check for file changes (milliseconds)
+		show_notifications = true, -- Show notification when files are reloaded
+	},
+	-- Git project settings
+	git = {
+		use_git_root = true, -- Set CWD to git root when opening Claude Code (if in git project)
+	},
+	-- Shell-specific settings
+	shell = {
+		separator = "&&", -- Command separator used in shell commands
+		pushd_cmd = "pushd", -- Command to push directory onto stack (e.g., 'pushd' for bash/zsh, 'enter' for nushell)
+		popd_cmd = "popd", -- Command to pop directory from stack (e.g., 'popd' for bash/zsh, 'exit' for nushell)
+	},
+	-- Command settings
+	command = "claude", -- Command used to launch Claude Code
+	-- Command variants
+	command_variants = {
+		-- Conversation management
+		continue = "--continue", -- Resume the most recent conversation
+		resume = "--resume", -- Display an interactive conversation picker
+
+		-- Output options
+		verbose = "--verbose", -- Enable verbose logging with full turn-by-turn output
+	},
+	-- Keymaps
+	keymaps = {
+		toggle = {
+			normal = "<C-,>", -- Normal mode keymap for toggling Claude Code, false to disable
+			terminal = "<C-,>", -- Terminal mode keymap for toggling Claude Code, false to disable
+			variants = {
+				continue = "<leader>cC", -- Normal mode keymap for Claude Code with continue flag
+				verbose = "<leader>cV", -- Normal mode keymap for Claude Code with verbose flag
+			},
+		},
+		window_navigation = true, -- Enable window navigation keymaps (<C-h/j/k/l>)
+		scrolling = true, -- Enable scrolling keymaps (<C-f/b>) for page up/down
+	},
 })
