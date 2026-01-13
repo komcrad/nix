@@ -51,6 +51,11 @@
         prettierd
         terraform-ls
         nodejs_20
+        nodePackages.typescript
+        nodePackages.prettier
+        nodePackages.eslint
+        nodePackages.eslint_d
+        nodePackages.typescript-language-server
         clj-kondo
         libiconv
         intelephense
