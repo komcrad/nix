@@ -65,6 +65,20 @@
           ./linux.nix
         ];
       };
+      framework = home-manager.lib.homeManagerConfiguration {
+        pkgs = import nixpkgs {
+          inherit system;
+          config.allowUnfree = true;
+        };
+        extraSpecialArgs = {
+          inherit unstable;
+          nixgl = (import nixgl { pkgs = nixgl-pkgs; });
+        };
+        modules = [
+          ./home.nix
+          ./linux-framework.nix
+        ];
+      };
       mac = home-manager.lib.homeManagerConfiguration {
         pkgs = import nixpkgs {
           inherit system;
