@@ -7,7 +7,8 @@ vim.call("plug#begin")
 -- Plug('junegunn/fzf.vim')
 -- Plug('junegunn/fzf-lsp.vim')
 Plug("nvim-lua/plenary.nvim", { ["commit"] = "2d9b06177a975543726ce5c73fca176cedbffe9d" })
-Plug("greggh/claude-code.nvim", { ["commit"] = "c9a31e51069977edaad9560473b5d031fcc5d38b" })
+--Plug("greggh/claude-code.nvim", { ["commit"] = "c9a31e51069977edaad9560473b5d031fcc5d38b" })
+Plug("greggh/claude-code.nvim", { ["commit"] = "d1dbc6b7025c4f034e14cc0dda6d29d5a6a5c4e8" })
 Plug("nvim-telescope/telescope.nvim", { ["commit"] = "85922dde3767e01d42a08e750a773effbffaea3e" })
 Plug("neovim/nvim-lspconfig", { ["commit"] = "d01864641c6e43c681c3e9f6cf4745c75fdd9dcc" })
 Plug("hrsh7th/cmp-nvim-lsp", { ["commit"] = "39e2eda76828d88b773cc27a3f61d2ad782c922d" })
@@ -35,6 +36,8 @@ Plug("catppuccin/nvim", { ["commit"] = "637d99e638bc6f1efedac582f6ccab08badac0c6
 Plug("knsh14/vim-github-link", { ["commit"] = "9df238dbf150417772f2a1b7748750cfeda3d167" })
 Plug("xiyaowong/fast-cursor-move.nvim", { ["commit"] = "9ab80d0184861be18833647e983086725b9905f9" })
 Plug("sphamba/smear-cursor.nvim", { ["commit"] = "110f7d8771fff9dde6b2aa7e20c29bae8bb4d834" })
+Plug("MeanderingProgrammer/render-markdown.nvim", { ["commit"] = "82aa306873db26c91f1c175bd902514a627a5d95" })
+
 --Plug('nvim-telescope/telescope-fzf-native.nvim', {['do'] = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release', ["commit"] = "dae2eac9d91464448b584c7949a31df8faefec56"})
 Plug(
 	"nvim-telescope/telescope-fzf-native.nvim",
@@ -92,6 +95,8 @@ require("treesitter-sexp").setup({
 	},
 })
 
+require("render-markdown").setup({})
+
 vim.api.nvim_create_user_command("ClojureReload", function()
 	vim.g.clojure_reload = true
 end, {})
@@ -128,6 +133,8 @@ conform.setup({
 		clojure = { "cljfmt" },
 
 		nix = { "alejandra" },
+
+		json = { "prettierd" },
 
 		php = { "php_cs_fixer" },
 	},
