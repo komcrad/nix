@@ -43,6 +43,8 @@
         logseq
         sops
         age
+        k9s
+        kubectl
         zulu21
         gcc
         cljstyle
