@@ -13,3 +13,8 @@ work:
 .PHONY: clean
 clean:
 	nix-collect-garbage -d
+
+.PHONY: update
+update:
+	nix flake update nixpkgs-unstable
+
