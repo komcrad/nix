@@ -24,11 +24,7 @@ Plug("Olical/conjure", { ["commit"] = "bc8907e4ca572720a9f785660781450f8e79ef05"
 Plug("tpope/vim-fugitive", { ["commit"] = "d4877e54cef67f5af4f950935b1ade19ed6b7370" })
 Plug("jiangmiao/auto-pairs", { ["commit"] = "39f06b873a8449af8ff6a3eee716d3da14d63a76" }) -- surround?
 --Plug("kylechui/nvim-surround", { ["commit"] = "dca2e998ff26681ee422b92c6ed39b3d2908d8a9" }) -- surround?
---Plug("guns/vim-sexp", { ["commit"] = "14464d4580af43424ed8f2614d94e62bfa40bb4d" })
---Plug("tpope/vim-sexp-mappings-for-regular-people", { ["commit"] = "cc5923e357373ea6ef0c13eae82f44e6b9b1d374" })
---Plug("PaterJason/nvim-treesitter-sexp", { ["commit"] = "32509f4071f9c8ba5655bf2e1ccf1f1cd8447da0" })
--- use frankitox fork until PaterJason's is fixed for nvim 11
-Plug("frankitox/nvim-treesitter-sexp", { ["commit"] = "a37fe6e6367ed314f8a4e12134f622adac9e0d3f" })
+Plug("guns/vim-sexp", { ["commit"] = "2fc0a7c7e44fe94e48156d6a5b5fea28538430eb" })
 Plug("nvim-treesitter/nvim-treesitter", { ["do"] = ":TSUpdate" })
 Plug("echasnovski/mini.surround", { ["commit"] = "5aab42fcdcf31fa010f012771eda5631c077840a" })
 Plug("stevearc/conform.nvim", { ["commit"] = "e3263eabbfc1bdbc5b6a60ba8431b64e8dca0a79" })
@@ -50,50 +46,28 @@ vim.call("plug#end")
 --require("nvim-surround").setup()
 
 require("mini.surround").setup()
-require("treesitter-sexp").setup({
-	-- Enable/disable
-	enabled = true,
-	-- Move cursor when applying commands
-	set_cursor = true,
-	-- Set to false to disable all keymaps
-	keymaps = {
-		-- Set to false to disable keymap type
-		commands = {
-			-- Set to false to disable individual keymaps
-			swap_prev_elem = "<e",
-			swap_next_elem = ">e",
-			swap_prev_form = "<f",
-			swap_next_form = ">f",
-			promote_elem = "<LocalLeader>O",
-			promote_form = "<LocalLeader>o",
-			splice = "<LocalLeader>@",
-			slurp_left = "<(",
-			slurp_right = ">)",
-			barf_left = ">(",
-			barf_right = "<)",
-			insert_head = "<I",
-			insert_tail = ">I",
-		},
-		motions = {
-			form_start = "(",
-			form_end = ")",
-			prev_elem = "[e",
-			next_elem = "]e",
-			prev_elem_end = "[E",
-			next_elem_end = "]E",
-			prev_top_level = "[[",
-			next_top_level = "]]",
-		},
-		textobjects = {
-			inner_elem = "ie",
-			outer_elem = "ae",
-			inner_form = "if",
-			outer_form = "af",
-			inner_top_level = "iF",
-			outer_top_level = "aF",
-		},
-	},
-})
+vim.g.sexp_mappings = {
+	-- Element motions: move cursor rather than select
+	sexp_select_prev_element = "",
+	sexp_select_next_element = "",
+	sexp_move_to_prev_element_head = "[e",
+	sexp_move_to_next_element_head = "]e",
+	sexp_move_to_prev_element_tail = "[E",
+	sexp_move_to_next_element_tail = "]E",
+	-- Swap
+	sexp_swap_list_backward = "<f",
+	sexp_swap_list_forward = ">f",
+	sexp_swap_element_backward = "<e",
+	sexp_swap_element_forward = ">e",
+	-- Slurp/barf
+	sexp_capture_prev_element = "<(",
+	sexp_capture_next_element = ">)",
+	sexp_emit_head_element = ">(",
+	sexp_emit_tail_element = "<)",
+	-- Insert at head/tail
+	sexp_insert_at_list_head = "<I",
+	sexp_insert_at_list_tail = ">I",
+}
 
 require("render-markdown").setup({})
 
