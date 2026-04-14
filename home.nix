@@ -53,11 +53,11 @@
         prettierd
         terraform-ls
         nodejs_20
-        nodePackages.typescript
-        nodePackages.prettier
-        nodePackages.eslint
-        nodePackages.eslint_d
-        nodePackages.typescript-language-server
+        typescript
+        prettier
+        eslint
+        eslint_d
+        typescript-language-server
         clj-kondo
         libiconv
         intelephense
@@ -72,6 +72,7 @@
         clojure-lsp
         docker
         docker-compose
+        tree-sitter
       ]);
 
     # This needs to actually be set to your username
