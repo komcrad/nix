@@ -348,6 +348,19 @@ require("lspconfig")["regols"].setup({
 
 require("lspconfig").csharp_ls.setup({})
 
+require("lspconfig").ts_ls.setup({
+	capabilities = capabilities,
+	on_new_config = function(new_config, new_root_dir)
+		local pnp = new_root_dir .. "/.pnp.cjs"
+		if vim.fn.filereadable(pnp) == 1 then
+			new_config.cmd = {
+				"node", "--require", pnp,
+				vim.fn.exepath("typescript-language-server"), "--stdio",
+			}
+		end
+	end,
+})
+
 vim.diagnostic.config({
 	virtual_text = true,
 	signs = false,
