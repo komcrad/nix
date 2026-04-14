@@ -72,6 +72,7 @@
         clojure-lsp
         docker
         docker-compose
+        tree-sitter
       ]);
 
     # This needs to actually be set to your username
