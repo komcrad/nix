@@ -23,11 +23,9 @@
         mariadb
         bash-completion
         cljfmt
-        open-policy-agent
         stylua
         bazelisk
         rustup
-        csharp-ls
         phpactor
         cmake
         black

@@ -1,14 +1,14 @@
 .PHONY: linux
 linux:
-	nix run home-manager/release-24.11 -- switch --flake .#linux --impure
+	nix run home-manager/master -- switch --flake .#linux --impure
 
 .PHONY: mac
 mac:
-	nix run home-manager/release-24.11 -- switch --flake .#mac
+	nix run home-manager/master -- switch --flake .#mac
 
 .PHONY: work
 work:
-	nix run home-manager/release-24.11 -- switch --flake .#work
+	nix run home-manager/master -- switch --flake .#work
 
 .PHONY: clean
 clean:
@@ -16,5 +16,5 @@ clean:
 
 .PHONY: update
 update:
-	nix flake update nixpkgs-unstable
+	nix flake update nixpkgs
 

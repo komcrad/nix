@@ -3,14 +3,12 @@
   description = "My Home Manager configuration";
 
   inputs = {
-    nixpkgs.url = "nixpkgs/nixos-24.11";
-    # nixpkgs.url = "nixpkgs/nixos-unstable";
-    nixpkgs-unstable.url = "nixpkgs/nixos-unstable";
+    nixpkgs.url = "nixpkgs/nixos-unstable";
 
     mac-app-util.url = "github:hraban/mac-app-util";
 
     home-manager = {
-      url = "github:nix-community/home-manager/release-24.11";
+      url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixgl = {
@@ -20,17 +18,16 @@
 
   outputs = {
     nixpkgs,
-    nixpkgs-unstable,
     home-manager,
     mac-app-util,
     nixgl,
     ...
   }: let
     lib = nixpkgs.lib;
-    system = "x86_64-linux";
+    #system = "x86_64-linux";
     #system = "aarch64-linux";
-    #system = "aarch64-darwin";
-    unstable = import nixpkgs-unstable {
+    system = "aarch64-darwin";
+    unstable = import nixpkgs {
       inherit system;
       config.allowUnfreePredicate = pkg:
         builtins.elem (lib.getName pkg) [
