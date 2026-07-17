@@ -30,9 +30,14 @@ Plug("echasnovski/mini.surround", { ["commit"] = "5aab42fcdcf31fa010f012771eda56
 Plug("stevearc/conform.nvim", { ["commit"] = "e3263eabbfc1bdbc5b6a60ba8431b64e8dca0a79" })
 Plug("catppuccin/nvim", { ["commit"] = "637d99e638bc6f1efedac582f6ccab08badac0c6" })
 Plug("knsh14/vim-github-link", { ["commit"] = "9df238dbf150417772f2a1b7748750cfeda3d167" })
+Plug("cajames/copy-reference.nvim", { ["commit"] = "6b888fa9b280724f79f33c031a2105a962c2014c"})
+Plug("numToStr/Comment.nvim", { ["commit"] = "e30b7f2008e52442154b66f7c519bfd2f1e32acb" })
+
 Plug("xiyaowong/fast-cursor-move.nvim", { ["commit"] = "9ab80d0184861be18833647e983086725b9905f9" })
 Plug("sphamba/smear-cursor.nvim", { ["commit"] = "110f7d8771fff9dde6b2aa7e20c29bae8bb4d834" })
 Plug("MeanderingProgrammer/render-markdown.nvim", { ["commit"] = "82aa306873db26c91f1c175bd902514a627a5d95" })
+Plug("selimacerbas/live-server.nvim", { ["commit"] = "f98bae79fd30274524412f7514549d84391d6bb2" })
+Plug("selimacerbas/markdown-preview.nvim", { ["commit"] = "faf50b5e233df953a1fd6946d0a8d758bf2e38a1" })
 
 --Plug('nvim-telescope/telescope-fzf-native.nvim', {['do'] = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release', ["commit"] = "dae2eac9d91464448b584c7949a31df8faefec56"})
 Plug(
@@ -46,6 +51,7 @@ vim.call("plug#end")
 --require("nvim-surround").setup()
 
 require("mini.surround").setup()
+require("Comment").setup()
 vim.g.sexp_mappings = {
 	-- Element motions: move cursor rather than select
 	sexp_select_prev_element = "",
@@ -70,6 +76,18 @@ vim.g.sexp_mappings = {
 }
 
 require("render-markdown").setup({})
+
+require("markdown_preview").setup({})
+vim.keymap.set("n", "<leader>mps", "<cmd>MarkdownPreview<cr>", { desc = "Markdown: Start preview" })
+vim.keymap.set("n", "<leader>mpS", "<cmd>MarkdownPreviewStop<cr>", { desc = "Markdown: Stop preview" })
+vim.keymap.set("n", "<leader>mpr", "<cmd>MarkdownPreviewRefresh<cr>", { desc = "Markdown: Refresh preview" })
+
+require("copy-reference").setup({
+	register = "+", -- clipboard register (+ for system clipboard)
+	use_git_root = true, -- relative paths from git root when in a git repo
+})
+vim.keymap.set({ "n", "v" }, "yr", "<cmd>CopyReference file<cr>", { desc = "Copy file path" })
+vim.keymap.set({ "n", "v" }, "yrr", "<cmd>CopyReference line<cr>", { desc = "Copy file:line reference" })
 
 vim.api.nvim_create_user_command("ClojureReload", function()
 	vim.g.clojure_reload = true

@@ -151,34 +151,6 @@
           echo "Start an nREPL in your project and Claude can evaluate code against it."
         '';
       };
-      ".claude/settings.json" = {
-        text = builtins.toJSON {
-          hooks = {
-            PreToolUse = [
-              {
-                matcher = "Write|Edit";
-                hooks = [
-                  {
-                    type = "command";
-                    command = "clj-paren-repair-claude-hook --format pre $TOOL_INPUT";
-                  }
-                ];
-              }
-            ];
-            PostToolUse = [
-              {
-                matcher = "Write|Edit";
-                hooks = [
-                  {
-                    type = "command";
-                    command = "clj-paren-repair-claude-hook --format post $TOOL_INPUT";
-                  }
-                ];
-              }
-            ];
-          };
-        };
-      };
     };
   };
 }
