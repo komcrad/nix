@@ -71,6 +71,9 @@
         docker
         docker-compose
         tree-sitter
+        kotlin
+        kotlin-language-server
+        gradle
       ]);
 
     # This needs to actually be set to your username

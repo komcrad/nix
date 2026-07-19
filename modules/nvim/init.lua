@@ -366,6 +366,10 @@ require("lspconfig")["regols"].setup({
 
 require("lspconfig").csharp_ls.setup({})
 
+require("lspconfig").kotlin_language_server.setup({
+	capabilities = capabilities,
+})
+
 require("lspconfig").ts_ls.setup({
 	capabilities = capabilities,
 	on_new_config = function(new_config, new_root_dir)
