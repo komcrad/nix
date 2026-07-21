@@ -38,7 +38,11 @@
         alejandra
       ])
       ++ (with unstable; [
-        logseq
+        # logseq pins electron_39 (EOL/insecure); override to electron_41 for a
+        # supported Chromium. electron_41's GPU stack hard-crashes at init on
+        # non-NixOS + NVIDIA unless it can reach the system driver, so wrap it
+        # with nixGL like kitty (no-op passthrough on mac/work). See linux.nix.
+        (config.lib.nixGL.wrap (logseq.override {electron_39 = electron_41;}))
         sops
         age
         k9s
@@ -50,7 +54,7 @@
         chromedriver
         prettierd
         terraform-ls
-        nodejs_20
+        nodejs_24
         typescript
         prettier
         eslint
@@ -74,6 +78,7 @@
         kotlin
         kotlin-language-server
         gradle
+        hunk
       ]);
 
     # This needs to actually be set to your username
