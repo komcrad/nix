@@ -38,11 +38,10 @@
         alejandra
       ])
       ++ (with unstable; [
-        # logseq pins electron_39 (EOL/insecure); override to electron_41 for a
-        # supported Chromium. electron_41's GPU stack hard-crashes at init on
-        # non-NixOS + NVIDIA unless it can reach the system driver, so wrap it
-        # with nixGL like kitty (no-op passthrough on mac/work). See linux.nix.
-        (config.lib.nixGL.wrap (logseq.override {electron_39 = electron_41;}))
+        # logseq pins electron_39 (EOL/insecure); override to a supported Chromium.
+        # The launch segfault was a mislabeled session (XDG_SESSION_TYPE=wayland on
+        # an X11/i3 session), fixed in ~/.xprofile, not here.
+        (logseq.override {electron_39 = electron_41;})
         sops
         age
         k9s
