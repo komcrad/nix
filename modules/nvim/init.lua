@@ -10,7 +10,7 @@ Plug("nvim-lua/plenary.nvim", { ["commit"] = "2d9b06177a975543726ce5c73fca176ced
 --Plug("greggh/claude-code.nvim", { ["commit"] = "c9a31e51069977edaad9560473b5d031fcc5d38b" })
 Plug("greggh/claude-code.nvim", { ["commit"] = "d1dbc6b7025c4f034e14cc0dda6d29d5a6a5c4e8" })
 Plug("nvim-telescope/telescope.nvim", { ["commit"] = "85922dde3767e01d42a08e750a773effbffaea3e" })
-Plug("neovim/nvim-lspconfig", { ["commit"] = "d01864641c6e43c681c3e9f6cf4745c75fdd9dcc" })
+Plug("neovim/nvim-lspconfig", { ["commit"] = "a4ed4e761c400849e8c9f8bda33e5083f890268c" })
 Plug("hrsh7th/cmp-nvim-lsp", { ["commit"] = "39e2eda76828d88b773cc27a3f61d2ad782c922d" })
 Plug("hrsh7th/cmp-buffer", { ["commit"] = "3022dbc9166796b644a841a02de8dd1cc1d311fa" })
 Plug("hrsh7th/cmp-path", { ["commit"] = "91ff86cd9c29299a64f968ebb45846c485725f23" })
@@ -366,9 +366,87 @@ require("lspconfig")["regols"].setup({
 
 require("lspconfig").csharp_ls.setup({})
 
-require("lspconfig").kotlin_language_server.setup({
+vim.lsp.config("kotlin_lsp", {
 	capabilities = capabilities,
 })
+vim.lsp.enable("kotlin_lsp")
+
+-- Gradle continuous build: re-runs the given task (default "test") on every
+-- save, as a watch-mode replacement for the deprecated Kotlin REPL/notebooks.
+vim.api.nvim_create_user_command("GradleWatch", function(opts)
+	local task = opts.args ~= "" and opts.args or "test"
+	vim.cmd("botright vsplit | terminal ./gradlew " .. task .. " --continuous")
+	vim.cmd("startinsert")
+end, { nargs = "?", desc = "Run a Gradle task in continuous (watch) mode" })
+vim.keymap.set("n", "<leader>gt", "<cmd>GradleWatch<cr>", { desc = "Gradle: watch test task" })
+
+-- Runs the current file's top-level `fun main()` via Gradle, re-running on
+-- every save. Injects a throwaway JavaExec task via --init-script so it works
+-- without an `application{}` block or a wired mainClass. Assumes a top-level
+-- `fun main` (the FileKt facade class), or honors `@file:JvmName("...")`.
+local function gradle_find_upwards(start_dir, filenames)
+	local dir = start_dir
+	while dir and dir ~= "/" do
+		for _, fname in ipairs(filenames) do
+			if vim.fn.filereadable(dir .. "/" .. fname) == 1 then
+				return dir
+			end
+		end
+		local parent = vim.fn.fnamemodify(dir, ":h")
+		if parent == dir then
+			break
+		end
+		dir = parent
+	end
+	return nil
+end
+
+vim.api.nvim_create_user_command("GradleRunMain", function()
+	local bufnr = vim.api.nvim_get_current_buf()
+	local file_dir = vim.fn.expand("%:p:h")
+
+	local root = gradle_find_upwards(file_dir, { "settings.gradle.kts", "settings.gradle" })
+	if not root then
+		vim.notify("GradleRunMain: no settings.gradle(.kts) found above this file", vim.log.levels.ERROR)
+		return
+	end
+
+	local module_dir = gradle_find_upwards(file_dir, { "build.gradle.kts", "build.gradle" }) or root
+	local task = "runMain"
+	if module_dir ~= root then
+		local rel = module_dir:sub(#root + 2):gsub("/", ":")
+		task = ":" .. rel .. ":runMain"
+	end
+
+	local filename = vim.fn.expand("%:t:r")
+	local pkg, jvmname, has_main = nil, nil, false
+	for _, line in ipairs(vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)) do
+		pkg = pkg or line:match("^%s*package%s+([%w_.]+)")
+		jvmname = jvmname or line:match('@file:JvmName%(%s*"([%w_.$]+)"%s*%)')
+		if line:match("^%s*fun%s+main%s*%(") then
+			has_main = true
+		end
+	end
+	if not has_main then
+		vim.notify("GradleRunMain: no top-level `fun main` found in this file", vim.log.levels.ERROR)
+		return
+	end
+
+	local class_name = jvmname or (filename:gsub("^%l", string.upper) .. "Kt")
+	local fqcn = pkg and (pkg .. "." .. class_name) or class_name
+
+	local init_script = vim.fn.stdpath("config") .. "/gradle/run-main.init.gradle"
+	local cmd = string.format(
+		"cd %s && ./gradlew --init-script %s %s --continuous -PmainClass=%s",
+		vim.fn.shellescape(root),
+		vim.fn.shellescape(init_script),
+		task,
+		vim.fn.shellescape(fqcn)
+	)
+	vim.cmd("botright vsplit | terminal " .. cmd)
+	vim.cmd("startinsert")
+end, { desc = "Run this file's main function via Gradle, watching for changes" })
+vim.keymap.set("n", "<leader>gm", "<cmd>GradleRunMain<cr>", { desc = "Gradle: run current file's main (watch mode)" })
 
 require("lspconfig").ts_ls.setup({
 	capabilities = capabilities,

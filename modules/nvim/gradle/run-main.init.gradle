@@ -1,0 +1,16 @@
+// Injects an ad-hoc `runMain` JavaExec task into any Java/Kotlin-JVM project,
+// without needing the `application` plugin or a mainClass wired in build.gradle.
+// Used by :GradleRunMain in init.lua via `--init-script`.
+allprojects {
+    afterEvaluate { proj ->
+        if (proj.plugins.hasPlugin('java')) {
+            proj.tasks.register('runMain', JavaExec) {
+                group = 'application'
+                description = 'Runs an ad-hoc main class (injected by nvim GradleRunMain)'
+                classpath = proj.sourceSets.main.runtimeClasspath
+                mainClass.set(proj.findProperty('mainClass') as String)
+                standardInput = System.in
+            }
+        }
+    }
+}

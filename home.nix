@@ -5,7 +5,9 @@
   config,
   nixgl,
   ...
-}: {
+}: let
+  kotlin-lsp = pkgs.callPackage ./modules/kotlin-lsp.nix {};
+in {
   nixpkgs.config.allowUnfreePredicate = pkg:
     builtins.elem (lib.getName pkg) [
       "vscode"
@@ -75,10 +77,10 @@
         docker-compose
         tree-sitter
         kotlin
-        kotlin-language-server
         gradle
         hunk
-      ]);
+      ])
+      ++ [kotlin-lsp];
 
     # This needs to actually be set to your username
     username = (import ./user.nix).username;
