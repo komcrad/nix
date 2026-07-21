@@ -368,6 +368,17 @@ require("lspconfig").csharp_ls.setup({})
 
 vim.lsp.config("kotlin_lsp", {
 	capabilities = capabilities,
+	-- kotlin-lsp keeps a single-writer RocksDB index cache under
+	-- ~/Library/Caches/JetBrains/analyzer/workspaces/<project-hash>, so two
+	-- concurrent nvim processes on the same project collide on its LOCK file.
+	-- Relocating `user.home` (JVM-only, doesn't affect anything else) per
+	-- nvim process gives each one its own cache and avoids the conflict.
+	cmd_env = {
+		IJ_JAVA_OPTIONS = "-Duser.home="
+			.. vim.fn.stdpath("cache")
+			.. "/kotlin-lsp-home/"
+			.. tostring(vim.fn.getpid()),
+	},
 })
 vim.lsp.enable("kotlin_lsp")
 
