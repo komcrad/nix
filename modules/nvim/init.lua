@@ -180,6 +180,12 @@ local actions = require("telescope.actions")
 local lga_actions = require("telescope-live-grep-args.actions")
 
 telescope.setup({
+  defaults = {
+    path_display = { "filename_first" },
+    layout_strategy = "vertical",
+    layout_config = { width = 0.99, height = 0.99 },
+    dynamic_preview_title = true,
+  },
 	extensions = {
 		live_grep_args = {
 			auto_quoting = true, -- enable/disable auto-quoting
